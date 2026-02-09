@@ -24,46 +24,107 @@ unset($_SESSION['flash']);
 <?php endif; ?>
 <div class="card shadow-sm">
     <div class="card-body">
-        <h5 class="card-title">Nuevo cliente</h5>
-        <form class="mb-4" method="post" action="index.php?action=add_client">
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label">Tipo</label>
-                    <select name="tipo" id="cliente_tipo" class="form-select" required>
-                        <option value="PERSONA">PERSONA</option>
-                        <option value="NEGOCIO">NEGOCIO</option>
-                    </select>
-                </div>
-                <div class="col-md-5">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="nombre" class="form-control" required>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Documento</label>
-                    <select name="documento_tipo" id="documento_tipo" class="form-select" required>
-                        <option value="DNI">DNI</option>
-                        <option value="RUC">RUC</option>
-                        <option value="PASAPORTE">Pasaporte</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Numero</label>
-                    <input type="text" name="documento_numero" class="form-control" required>
-                    <div class="form-text" id="documento_help">DNI: 8 digitos.</div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Telefono</label>
-                    <input type="text" name="telefono" class="form-control" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-                <div class="col-md-4 d-flex align-items-end">
-                    <button class="btn btn-outline-primary w-100" type="submit">Crear cliente</button>
+        <div class="accordion" id="loanForms">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingClient">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseClient" aria-expanded="true" aria-controls="collapseClient">
+                        Nuevo cliente
+                    </button>
+                </h2>
+                <div id="collapseClient" class="accordion-collapse collapse show" aria-labelledby="headingClient" data-bs-parent="#loanForms">
+                    <div class="accordion-body">
+                        <form class="mb-4" method="post" action="index.php?action=add_client">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Tipo</label>
+                                    <select name="tipo" id="cliente_tipo" class="form-select" required>
+                                        <option value="PERSONA">PERSONA</option>
+                                        <option value="NEGOCIO">NEGOCIO</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label">Nombre</label>
+                                    <input type="text" name="nombre" class="form-control" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Documento</label>
+                                    <select name="documento_tipo" id="documento_tipo" class="form-select" required>
+                                        <option value="DNI">DNI</option>
+                                        <option value="RUC">RUC</option>
+                                        <option value="PASAPORTE">Pasaporte</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Numero</label>
+                                    <input type="text" name="documento_numero" class="form-control" required>
+                                    <div class="form-text" id="documento_help">DNI: 8 digitos.</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Telefono</label>
+                                    <input type="text" name="telefono" class="form-control" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end">
+                                    <button class="btn btn-outline-primary w-100" type="submit">Crear cliente</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </form>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingLoan">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLoan" aria-expanded="false" aria-controls="collapseLoan">
+                        Nuevo prestamo
+                    </button>
+                </h2>
+                <div id="collapseLoan" class="accordion-collapse collapse" aria-labelledby="headingLoan" data-bs-parent="#loanForms">
+                    <div class="accordion-body">
+                        <form method="post" action="index.php?action=add_loan">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Cliente</label>
+                                    <select name="cliente_id" class="form-select" required>
+                                        <option value="">Selecciona</option>
+                                        <?php foreach ($clients as $client): ?>
+                                            <option value="<?= (int) $client['id'] ?>" <?= $selectedClientId === (int) $client['id'] ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($client['nombre']) ?> (<?= htmlspecialchars($client['tipo']) ?>) - <?= htmlspecialchars($client['documento']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Monto original</label>
+                                    <input type="number" step="0.01" name="monto_original" class="form-control" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Saldo pendiente</label>
+                                    <input type="number" step="0.01" name="saldo_pendiente" class="form-control" placeholder="Si vacio, usa monto original">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Tasa</label>
+                                    <input type="number" step="0.001" name="tasa" class="form-control" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Fecha desembolso</label>
+                                    <input type="date" name="fecha_desembolso" class="form-control" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Proxima fecha pago</label>
+                                    <input type="date" name="proxima_fecha_pago" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <button class="btn btn-primary" type="submit">Crear prestamo</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script>
             (function () {
                 var tipo = document.getElementById('cliente_tipo');
@@ -101,45 +162,5 @@ unset($_SESSION['flash']);
                 syncDocOptions();
             })();
         </script>
-        <hr>
-        <h5 class="card-title">Nuevo prestamo</h5>
-        <form method="post" action="index.php?action=add_loan">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label">Cliente</label>
-                    <select name="cliente_id" class="form-select" required>
-                        <option value="">Selecciona</option>
-                        <?php foreach ($clients as $client): ?>
-                            <option value="<?= (int) $client['id'] ?>" <?= $selectedClientId === (int) $client['id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($client['nombre']) ?> (<?= htmlspecialchars($client['tipo']) ?>) - <?= htmlspecialchars($client['documento']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Monto original</label>
-                    <input type="number" step="0.01" name="monto_original" class="form-control" required>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Saldo pendiente</label>
-                    <input type="number" step="0.01" name="saldo_pendiente" class="form-control" placeholder="Si vacio, usa monto original">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Tasa</label>
-                    <input type="number" step="0.001" name="tasa" class="form-control" required>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Fecha desembolso</label>
-                    <input type="date" name="fecha_desembolso" class="form-control" required>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Proxima fecha pago</label>
-                    <input type="date" name="proxima_fecha_pago" class="form-control" required>
-                </div>
-            </div>
-            <div class="mt-4">
-                <button class="btn btn-primary" type="submit">Crear prestamo</button>
-            </div>
-        </form>
     </div>
 </div>
