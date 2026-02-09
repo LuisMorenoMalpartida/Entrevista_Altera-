@@ -38,6 +38,9 @@ if ($action !== '') {
         case 'export_overdue':
             include __DIR__ . '/actions/export_overdue.php';
             break;
+        case 'export_client_report':
+            include __DIR__ . '/actions/export_client_report.php';
+            break;
         case 'update_payment':
             include __DIR__ . '/actions/update_payment.php';
             break;
@@ -116,6 +119,9 @@ switch ($page) {
             break;
         }
         include __DIR__ . '/pages/client_edit.php';
+        break;
+    case 'client_report':
+        include __DIR__ . '/pages/client_report.php';
         break;
     case 'payment_edit':
         if (!in_array(current_user_role(), ['ADMIN', 'COBRADOR'], true)) {
