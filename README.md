@@ -53,6 +53,11 @@ CREATE DATABASE entrevista CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 - Bitacora de gestiones (llamada, WhatsApp, email, visita).
 - Dashboard con resumen y top atrasados.
 
+## Bonus
+
+- Exportar CSV de prestamos en mora desde el listado.
+- Recordatorio WhatsApp en el detalle de prestamo (texto para copiar).
+
 ## Regla de mora
 
 Un prestamo esta en mora si hoy es mayor a la proxima fecha de pago y el saldo es mayor a 0.
