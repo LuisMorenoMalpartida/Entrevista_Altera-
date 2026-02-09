@@ -1,0 +1,21 @@
+body {
+    background: #f5f7fb;
+}
+
+.card {
+    border-radius: 0.75rem;
+}
+
+.status-al_dia {
+    background-color: #198754;
+}
+
+.status-mora_1_7,
+.status-mora_8_30,
+.status-mora_31_mas {
+    background-color: #dc3545;
+}
+
+.status-cancelado {
+    background-color: #6c757d;
+}
