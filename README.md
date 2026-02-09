@@ -51,12 +51,19 @@ CREATE DATABASE entrevista CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 - Calculo de mora segun fecha de pago y saldo pendiente.
 - Registro de pagos (actualiza saldo y si queda 0 se marca cancelado).
 - Bitacora de gestiones (llamada, WhatsApp, email, visita).
+- Edicion y eliminacion de pagos y gestiones (con permisos).
+- Edicion y eliminacion de prestamos y clientes (solo si no tienen registros dependientes).
 - Dashboard con resumen y top atrasados.
 
 ## Bonus
 
 - Exportar CSV de prestamos en mora desde el listado.
 - Recordatorio WhatsApp en el detalle de prestamo (texto para copiar).
+
+## Permisos (acciones)
+
+- ADMIN y COBRADOR: pueden editar/eliminar pagos y gestiones.
+- ADMIN: puede eliminar prestamos y clientes (si no tienen dependencias).
 
 ## Regla de mora
 
