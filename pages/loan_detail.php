@@ -44,6 +44,7 @@ $canManage = in_array(current_user_role(), ['ADMIN', 'COBRADOR'], true);
         <div class="text-muted"><?= htmlspecialchars($loan['email']) ?> - <?= htmlspecialchars($loan['telefono']) ?></div>
     </div>
     <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary btn-sm" href="index.php?page=client_report&client_id=<?= (int) $loan['cliente_id'] ?>">Reporte mora cliente</a>
         <?php if ($canManage): ?>
             <a class="btn btn-outline-primary btn-sm" href="index.php?page=loan_edit&id=<?= (int) $loan['id'] ?>">Editar prestamo</a>
             <a class="btn btn-outline-primary btn-sm" href="index.php?page=client_edit&id=<?= (int) $loan['cliente_id'] ?>&loan_id=<?= (int) $loan['id'] ?>">Editar cliente</a>
