@@ -16,6 +16,8 @@ Mini-modulo web de cobranza con PHP nativo y MySQL.
 
 ```sql
 CREATE DATABASE entrevista CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+Copiar en SQL lo del Schema.sql y luego el sedd_altera_collections.sql
 ```
 
 3. Importa el dataset entregado (si no tienes dataset, usa el schema local):
