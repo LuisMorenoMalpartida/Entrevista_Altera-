@@ -38,6 +38,30 @@ if ($action !== '') {
         case 'export_overdue':
             include __DIR__ . '/actions/export_overdue.php';
             break;
+        case 'update_payment':
+            include __DIR__ . '/actions/update_payment.php';
+            break;
+        case 'delete_payment':
+            include __DIR__ . '/actions/delete_payment.php';
+            break;
+        case 'update_collection':
+            include __DIR__ . '/actions/update_collection.php';
+            break;
+        case 'delete_collection':
+            include __DIR__ . '/actions/delete_collection.php';
+            break;
+        case 'update_loan':
+            include __DIR__ . '/actions/update_loan.php';
+            break;
+        case 'delete_loan':
+            include __DIR__ . '/actions/delete_loan.php';
+            break;
+        case 'update_client':
+            include __DIR__ . '/actions/update_client.php';
+            break;
+        case 'delete_client':
+            include __DIR__ . '/actions/delete_client.php';
+            break;
         default:
             $_SESSION['flash'] = 'Accion no valida.';
             header('Location: index.php?page=dashboard');
@@ -78,6 +102,34 @@ switch ($page) {
             break;
         }
         include __DIR__ . '/pages/loan_new.php';
+        break;
+    case 'loan_edit':
+        if (!in_array(current_user_role(), ['ADMIN', 'COBRADOR'], true)) {
+            echo '<div class="alert alert-warning">No tienes permisos para editar prestamos.</div>';
+            break;
+        }
+        include __DIR__ . '/pages/loan_edit.php';
+        break;
+    case 'client_edit':
+        if (!in_array(current_user_role(), ['ADMIN', 'COBRADOR'], true)) {
+            echo '<div class="alert alert-warning">No tienes permisos para editar clientes.</div>';
+            break;
+        }
+        include __DIR__ . '/pages/client_edit.php';
+        break;
+    case 'payment_edit':
+        if (!in_array(current_user_role(), ['ADMIN', 'COBRADOR'], true)) {
+            echo '<div class="alert alert-warning">No tienes permisos para editar pagos.</div>';
+            break;
+        }
+        include __DIR__ . '/pages/payment_edit.php';
+        break;
+    case 'collection_edit':
+        if (!in_array(current_user_role(), ['ADMIN', 'COBRADOR'], true)) {
+            echo '<div class="alert alert-warning">No tienes permisos para editar gestiones.</div>';
+            break;
+        }
+        include __DIR__ . '/pages/collection_edit.php';
         break;
     case 'user_new':
         if (current_user_role() !== 'ADMIN') {
