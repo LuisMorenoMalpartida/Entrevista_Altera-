@@ -59,7 +59,10 @@ unset($_SESSION['flash']);
 </nav>
 <div class="d-flex align-items-center justify-content-between mb-3">
     <h3 class="mb-0">Prestamos</h3>
-    <a class="btn btn-primary" href="index.php?page=loan_new">Nuevo prestamo</a>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" href="index.php?action=export_overdue">Exportar mora CSV</a>
+        <a class="btn btn-primary" href="index.php?page=loan_new">Nuevo prestamo</a>
+    </div>
 </div>
 <?php if ($flash): ?>
     <div class="alert alert-success"><?= htmlspecialchars($flash) ?></div>

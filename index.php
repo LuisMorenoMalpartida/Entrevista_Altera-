@@ -35,6 +35,9 @@ if ($action !== '') {
         case 'add_user':
             include __DIR__ . '/actions/add_user.php';
             break;
+        case 'export_overdue':
+            include __DIR__ . '/actions/export_overdue.php';
+            break;
         default:
             $_SESSION['flash'] = 'Accion no valida.';
             header('Location: index.php?page=dashboard');
