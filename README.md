@@ -11,6 +11,7 @@ Mini-modulo web de cobranza con PHP nativo y MySQL.
 ## Instalacion
 
 1. Copia esta carpeta dentro de `c:\xampp\htdocs\entrevista`.
+2. Abre XAMPP y enciende Apache + MySQL.
 2. Crea la base de datos:
 
 ```sql
@@ -27,12 +28,21 @@ CREATE DATABASE entrevista CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 4. Ajusta credenciales en `config.php` si tu MySQL no usa `root` sin password.
 5. Abre `http://localhost/entrevista/index.php` en el navegador.
 
+### Orden recomendado de importacion
+
+1. `sql/schema.sql`
+2. `sql/seed_altera_collections.sql`
+
+### Primer login
+
+- Usuario: `admin`
+- Password: `admin123`
+- En el primer login se crea el usuario ADMIN en la tabla `usuarios` si esta vacia.
+
 ## Credenciales
 
 - Usuario: `admin`
 - Password: `admin123`
-
-Nota: en el primer login se crea el usuario ADMIN en la tabla `usuarios` si esta vacia.
 
 ## Funcionalidades
 
@@ -75,3 +85,18 @@ Roles sugeridos:
 - COBRADOR: registra pagos y gestiones.
 - SUPERVISOR: solo lectura.
 - AUDITOR: solo lectura.
+
+## Flujo de prueba rapido
+
+1. Login con `admin/admin123`.
+2. Dashboard: validar cards y top atrasados.
+3. Prestamos: filtrar por tipo, estado y buscar por nombre.
+4. Detalle: registrar un pago y verificar saldo actualizado.
+5. Detalle: registrar una gestion y verificar bitacora.
+6. Nuevo prestamo: crear cliente nuevo y luego el prestamo.
+
+## Solucion de problemas
+
+- Error "Unknown database 'entrevista'": crea la BD y reintenta.
+- Warning de tasa truncada: asegurate de tener `tasa DECIMAL(6,3)`.
+- Si no puedes crear usuarios: verifica que exista la tabla `usuarios`.
