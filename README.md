@@ -55,6 +55,7 @@ Copiar en SQL lo del Schema.sql y luego el sedd_altera_collections.sql
 - Bitacora de gestiones (llamada, WhatsApp, email, visita).
 - Edicion y eliminacion de pagos y gestiones (con permisos).
 - Edicion y eliminacion de prestamos y clientes (solo si no tienen registros dependientes).
+- Reporte de mora por cliente (vista y export CSV).
 - Dashboard con resumen y top atrasados.
 
 ## Bonus
