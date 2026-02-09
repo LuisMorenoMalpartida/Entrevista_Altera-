@@ -1,54 +1,95 @@
 # Cobranza Mini
 
-Mini-modulo web de cobranza con PHP nativo y MySQL.
+Mini-modulo web de cobranza hecho con PHP nativo y MySQL. Permite administrar prestamos, registrar pagos, llevar bitacora de gestiones de cobranza y generar reportes de mora por cliente.
 
-## Requisitos
+## Stack
 
-- XAMPP con PHP 8.x
+- PHP 8.x (sin framework)
 - MySQL/MariaDB
-- MySQL Workbench (para importar SQL)
+- Bootstrap (UI)
+
+## Estructura del proyecto
+
+```
+actions/        Controladores de POST y export
+assets/         Estilos y recursos
+lib/            Helpers (auth, DB, calculos de mora)
+pages/          Vistas renderizadas por index.php
+partials/       Layout (header/footer)
+sql/            Schema y seeds
+config.php      Configuracion principal
+index.php       Front controller y router
+```
 
 ## Instalacion
 
 1. Copia esta carpeta dentro de `c:\xampp\htdocs\entrevista`.
 2. Abre XAMPP y enciende Apache + MySQL.
-2. Crea la base de datos:
+3. Crea la base de datos:
 
 ```sql
 CREATE DATABASE entrevista CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-
-Copiar en SQL lo del Schema.sql y luego el sedd_altera_collections.sql
 ```
 
-3. Importa el dataset entregado (si no tienes dataset, usa el schema local):
+4. Importa el schema y los seeds:
 
-- En MySQL Workbench: Server > Data Import.
-- Selecciona el archivo SQL entregado y ejecuta la importacion.
-- Alternativa: importa `sql/schema.sql` para crear tablas vacias.
-- Dataset de prueba: importa `sql/seed_altera_collections.sql`.
+- Importa `sql/schema.sql`.
+- (Opcional) Importa `sql/seed_altera_collections.sql` para datos de prueba.
 
-4. Ajusta credenciales en `config.php` si tu MySQL no usa `root` sin password.
-5. Abre `http://localhost/entrevista/index.php` en el navegador.
+5. Ajusta credenciales en `config.php` si tu MySQL no usa `root` sin password.
+6. Abre `http://localhost/entrevista/index.php` en el navegador.
 
 ### Orden recomendado de importacion
 
 1. `sql/schema.sql`
 2. `sql/seed_altera_collections.sql`
 
-### Primer login
+## Configuracion
+
+Archivo `config.php`:
+
+- `db`: host, name, user, pass, charset.
+- `auth`: credenciales iniciales (solo se usan si no existe ningun usuario en la tabla `usuarios`).
+
+## Credenciales por defecto
 
 - Usuario: `admin`
 - Password: `admin123`
-- En el primer login se crea el usuario ADMIN en la tabla `usuarios` si esta vacia.
 
-## Credenciales
+En el primer login se crea el usuario ADMIN en la tabla `usuarios` si esta vacia.
 
-- Usuario: `admin`
-- Password: `admin123`
+## Enrutamiento
+
+Entrada principal: `index.php`.
+
+### Paginas (`index.php?page=...`)
+
+- `dashboard`: resumen general.
+- `loans`: listado de prestamos con filtros.
+- `loan_detail`: detalle del prestamo, pagos y gestiones.
+- `loan_new`: alta de prestamo (solo ADMIN).
+- `loan_edit`: edicion de prestamo (ADMIN/COBRADOR).
+- `client_edit`: edicion de cliente (ADMIN/COBRADOR).
+- `client_report`: reporte de mora por cliente.
+- `payment_edit`: edicion de pago (ADMIN/COBRADOR).
+- `collection_edit`: edicion de gestion (ADMIN/COBRADOR).
+- `user_new`: alta de usuarios (solo ADMIN).
+- `login`: pantalla de acceso.
+
+### Acciones (`index.php?action=...`)
+
+- `login` / `logout`
+- `add_loan`, `update_loan`, `delete_loan`
+- `add_client`, `update_client`, `delete_client`
+- `add_payment`, `update_payment`, `delete_payment`
+- `add_collection`, `update_collection`, `delete_collection`
+- `add_user`
+- `export_overdue` (CSV de mora)
+- `export_client_report` (CSV por cliente)
 
 ## Funcionalidades
 
-- Login basico.
+- Login basico con sesiones.
 - Listado de prestamos con filtros por tipo, estado y solo mora.
 - Calculo de mora segun fecha de pago y saldo pendiente.
 - Registro de pagos (actualiza saldo y si queda 0 se marca cancelado).
@@ -57,16 +98,13 @@ Copiar en SQL lo del Schema.sql y luego el sedd_altera_collections.sql
 - Edicion y eliminacion de prestamos y clientes (solo si no tienen registros dependientes).
 - Reporte de mora por cliente (vista y export CSV).
 - Dashboard con resumen y top atrasados.
-
-## Bonus
-
-- Exportar CSV de prestamos en mora desde el listado.
-- Recordatorio WhatsApp en el detalle de prestamo (texto para copiar).
+- Recordatorio de WhatsApp en el detalle del prestamo (texto para copiar).
 
 ## Permisos (acciones)
 
 - ADMIN y COBRADOR: pueden editar/eliminar pagos y gestiones.
-- ADMIN: puede eliminar prestamos y clientes (si no tienen dependencias).
+- ADMIN: puede crear usuarios y eliminar prestamos/clientes.
+- SUPERVISOR y AUDITOR: solo lectura (si existen en la tabla `usuarios`).
 
 ## Regla de mora
 
@@ -80,26 +118,15 @@ Estados:
 - `MORA_31_MAS`
 - `CANCELADO`
 
-## Notas
-
-- El estado se calcula en tiempo real (no se guarda en BD).
-- El saldo se actualiza cada vez que se registra un pago.
+El estado se calcula en tiempo real en `lib/loan.php` y no se persiste como estado definitivo.
 
 ## Tablas (modelo minimo)
 
-- clientes: id, tipo, nombre, documento, telefono, email
-- prestamos: id, cliente_id, monto_original, saldo_pendiente, tasa, fecha_desembolso, proxima_fecha_pago, estado
-- pagos: id, prestamo_id, fecha_pago, monto, metodo, nota
-- gestiones_cobranza: id, prestamo_id, fecha_hora, canal, resultado, comentario
-
-## Usuarios y roles
-
-Roles sugeridos:
-
-- ADMIN: acceso total y creacion de usuarios.
-- COBRADOR: registra pagos y gestiones.
-- SUPERVISOR: solo lectura.
-- AUDITOR: solo lectura.
+- `clientes`: id, tipo, nombre, documento, telefono, email
+- `prestamos`: id, cliente_id, monto_original, saldo_pendiente, tasa, fecha_desembolso, proxima_fecha_pago, estado
+- `pagos`: id, prestamo_id, fecha_pago, monto, metodo, nota
+- `gestiones_cobranza`: id, prestamo_id, fecha_hora, canal, resultado, comentario
+- `usuarios`: id, username, password_hash, role
 
 ## Flujo de prueba rapido
 
@@ -113,5 +140,5 @@ Roles sugeridos:
 ## Solucion de problemas
 
 - Error "Unknown database 'entrevista'": crea la BD y reintenta.
-- Warning de tasa truncada: asegurate de tener `tasa DECIMAL(6,3)`.
-- Si no puedes crear usuarios: verifica que exista la tabla `usuarios`.
+- Warning de tasa truncada: asegurate de tener `tasa DECIMAL(6,3)` en el schema.
+- No puedes crear usuarios: verifica que exista la tabla `usuarios`.
