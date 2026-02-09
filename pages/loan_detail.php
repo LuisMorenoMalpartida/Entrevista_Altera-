@@ -81,6 +81,25 @@ unset($_SESSION['flash']);
         </div>
     </div>
 </div>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <h5 class="card-title mb-0">Recordatorio WhatsApp</h5>
+            <button class="btn btn-outline-primary btn-sm" type="button" id="copy_whatsapp">Copiar</button>
+        </div>
+        <?php
+            $reminderText = sprintf(
+                'Hola %s, le recordamos el pago del prestamo #%d. Saldo pendiente: %s. Proxima fecha de pago: %s. Dias de atraso: %d. Gracias.',
+                $loan['client_name'],
+                $loan['id'],
+                number_format((float) $loan['saldo_pendiente'], 2),
+                $loan['proxima_fecha_pago'],
+                $daysOverdue
+            );
+        ?>
+        <textarea class="form-control" rows="3" id="whatsapp_text" readonly><?= htmlspecialchars($reminderText) ?></textarea>
+    </div>
+</div>
 <ul class="nav nav-tabs mb-3" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link active" id="pagos-tab" data-bs-toggle="tab" data-bs-target="#pagos" type="button" role="tab">Pagos</button>
@@ -233,3 +252,17 @@ unset($_SESSION['flash']);
         </div>
     </div>
 </div>
+<script>
+    (function () {
+        var button = document.getElementById('copy_whatsapp');
+        var textarea = document.getElementById('whatsapp_text');
+        if (!button || !textarea) {
+            return;
+        }
+        button.addEventListener('click', function () {
+            textarea.select();
+            textarea.setSelectionRange(0, textarea.value.length);
+            document.execCommand('copy');
+        });
+    })();
+</script>
