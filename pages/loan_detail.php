@@ -28,6 +28,7 @@ $collections = $collections->fetchAll();
 
 $flash = $_SESSION['flash'] ?? null;
 unset($_SESSION['flash']);
+$canManage = in_array(current_user_role(), ['ADMIN', 'COBRADOR'], true);
 ?>
 <nav aria-label="breadcrumb" class="mb-2">
     <ol class="breadcrumb mb-0">
@@ -42,7 +43,21 @@ unset($_SESSION['flash']);
         <div class="text-muted"><?= htmlspecialchars($loan['client_name']) ?> (<?= htmlspecialchars($loan['tipo']) ?>) - <?= htmlspecialchars($loan['documento']) ?></div>
         <div class="text-muted"><?= htmlspecialchars($loan['email']) ?> - <?= htmlspecialchars($loan['telefono']) ?></div>
     </div>
-    <a class="btn btn-outline-secondary" href="index.php?page=loans">Volver</a>
+    <div class="d-flex flex-wrap gap-2">
+        <?php if ($canManage): ?>
+            <a class="btn btn-outline-primary btn-sm" href="index.php?page=loan_edit&id=<?= (int) $loan['id'] ?>">Editar prestamo</a>
+            <a class="btn btn-outline-primary btn-sm" href="index.php?page=client_edit&id=<?= (int) $loan['cliente_id'] ?>&loan_id=<?= (int) $loan['id'] ?>">Editar cliente</a>
+            <form method="post" action="index.php?action=delete_loan" onsubmit="return confirm('Eliminar prestamo?');">
+                <input type="hidden" name="loan_id" value="<?= (int) $loan['id'] ?>">
+                <button class="btn btn-outline-danger btn-sm" type="submit">Eliminar prestamo</button>
+            </form>
+            <form method="post" action="index.php?action=delete_client" onsubmit="return confirm('Eliminar cliente?');">
+                <input type="hidden" name="client_id" value="<?= (int) $loan['cliente_id'] ?>">
+                <button class="btn btn-outline-danger btn-sm" type="submit">Eliminar cliente</button>
+            </form>
+        <?php endif; ?>
+        <a class="btn btn-outline-secondary btn-sm" href="index.php?page=loans">Volver</a>
+    </div>
 </div>
 <?php if ($flash): ?>
     <div class="alert alert-success"><?= htmlspecialchars($flash) ?></div>
@@ -155,6 +170,7 @@ unset($_SESSION['flash']);
                                     <th>Monto</th>
                                     <th>Metodo</th>
                                     <th>Nota</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -167,6 +183,18 @@ unset($_SESSION['flash']);
                                         <td><?= number_format((float) $payment['monto'], 2) ?></td>
                                         <td><?= htmlspecialchars($payment['metodo']) ?></td>
                                         <td><?= htmlspecialchars($payment['nota']) ?></td>
+                                        <td>
+                                            <?php if ($canManage): ?>
+                                                <div class="d-flex gap-1">
+                                                    <a class="btn btn-outline-primary btn-sm" href="index.php?page=payment_edit&loan_id=<?= (int) $loan['id'] ?>&payment_id=<?= (int) $payment['id'] ?>">Editar</a>
+                                                    <form method="post" action="index.php?action=delete_payment" onsubmit="return confirm('Eliminar pago?');">
+                                                        <input type="hidden" name="loan_id" value="<?= (int) $loan['id'] ?>">
+                                                        <input type="hidden" name="payment_id" value="<?= (int) $payment['id'] ?>">
+                                                        <button class="btn btn-outline-danger btn-sm" type="submit">Eliminar</button>
+                                                    </form>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                                 </tbody>
@@ -229,6 +257,7 @@ unset($_SESSION['flash']);
                                     <th>Canal</th>
                                     <th>Resultado</th>
                                     <th>Comentario</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -241,6 +270,18 @@ unset($_SESSION['flash']);
                                         <td><?= htmlspecialchars($collection['canal']) ?></td>
                                         <td><?= htmlspecialchars($collection['resultado']) ?></td>
                                         <td><?= htmlspecialchars($collection['comentario']) ?></td>
+                                        <td>
+                                            <?php if ($canManage): ?>
+                                                <div class="d-flex gap-1">
+                                                    <a class="btn btn-outline-primary btn-sm" href="index.php?page=collection_edit&loan_id=<?= (int) $loan['id'] ?>&collection_id=<?= (int) $collection['id'] ?>">Editar</a>
+                                                    <form method="post" action="index.php?action=delete_collection" onsubmit="return confirm('Eliminar gestion?');">
+                                                        <input type="hidden" name="loan_id" value="<?= (int) $loan['id'] ?>">
+                                                        <input type="hidden" name="collection_id" value="<?= (int) $collection['id'] ?>">
+                                                        <button class="btn btn-outline-danger btn-sm" type="submit">Eliminar</button>
+                                                    </form>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                                 </tbody>

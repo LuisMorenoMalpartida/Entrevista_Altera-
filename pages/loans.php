@@ -104,6 +104,9 @@ unset($_SESSION['flash']);
     <div class="col-md-3 d-flex align-items-end">
         <button class="btn btn-primary w-100" type="submit">Filtrar</button>
     </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <a class="btn btn-outline-secondary w-100" href="index.php?page=loans">Limpiar</a>
+    </div>
 </form>
 <div class="card shadow-sm">
     <div class="table-responsive">
